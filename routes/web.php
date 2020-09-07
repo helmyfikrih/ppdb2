@@ -78,8 +78,9 @@ Route::group([
     Route:: get('/show/{id}/edit','Web\PaymentConfirmationController@editPaymentConfirmation');
     Route:: get('/input','Web\PaymentConfirmationController@inputPaymentConfirmation');
     Route:: patch('/update/{id}','Web\PaymentConfirmationController@updatePaymentConfirmation');
+    Route:: patch('/status-accept/{id}','Web\PaymentConfirmationController@acceptPaymentConfirmation');
+    Route:: patch('/status-denied/{id}','Web\PaymentConfirmationController@deniedPaymentConfirmation');
     Route:: delete('/delete/{id}','Web\PaymentConfirmationController@deletePaymentConfirmation');
-    // Route:: get('/test','Web\PaymentConfirmationController@verificationPaymentConfirmation');
 });
 
 Route::group([

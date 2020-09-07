@@ -49,8 +49,24 @@
             readonly>
     </div>
 </div>
+<td><a href="/payment/show/{{$user->id}}/edit" class="btn btn-primary ml-3">Edit</a></td>
 @if(Auth::user()->role_id == '1')
-<td><a href="/" class="btn btn-secondary">Back</a></td>
+<td><a href="/payment/show" class="btn btn-secondary ml-3">Back</a></td>
+
+<div class="row m-3">
+    <form action="/payment/status-accept/{{$user->id}}" method="POST">
+        @csrf
+        @method('PATCH')
+        <button type="submit" class="btn btn-success"
+            onclick="return confirm('Are you sure want to accept this payment ?')">Accept</button>
+    </form>
+
+    <form action="/payment/status-denied/{{$user->id}}" method="POST">
+        @csrf
+        @method('PATCH')
+        <button type="submit" class="btn btn-warning ml-3"
+            onclick="return confirm('Are you sure want to denied this payment ?')">Denied</button>
+    </form>
+</div>
 @endif
-<td><a href="/payment/show/{{$user->id}}/edit" class="btn btn-primary">Edit</a></td>
 @endsection

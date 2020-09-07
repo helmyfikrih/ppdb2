@@ -64,7 +64,7 @@ class PaymentConfirmationController extends Controller
         $payment->bank_name        = $request->bank_name;
         $payment->bank_account     = $request->bank_account;
         $payment->proof_of_payment = base64_encode(file_get_contents($request->file('proof_of_payment')));
-        $payment->status           = 'waiting for admin verification';
+        $payment->status           = 'Menunggu Konfirmasi Pembayaran';
         $payment->note             = $request->note;
         $payment->save();
         return redirect('/payment/show')->with('success','Your payment has been added');
@@ -81,6 +81,29 @@ class PaymentConfirmationController extends Controller
             }
         }else{
                 return view('admin.payment_confirmation.edit',['user'=>$user]);
+        }
+    }
+
+    public function acceptPaymentConfirmation($id)
+    {
+        if(auth()->user()->role_id == 1){
+            $payment=PaymentConfirmation::find($id);
+            $payment->status='Pembayaran Diterima';
+            $payment->save();
+            return redirect('/payment/show')->with('success','Payment confirmation has been accepted');
+        }else{
+            return redirect('/')->with('error','No authorization');
+        }
+    }
+    public function deniedPaymentConfirmation($id)
+    {
+        if(auth()->user()->role_id == 1){
+            $payment=PaymentConfirmation::find($id);
+            $payment->status='Pembayaran Ditolak';
+            $payment->save();
+            return redirect('/payment/show')->with('error','Payment confirmation has been denied');
+        }else{
+            return redirect('/')->with('error','No authorization');
         }
     }
 
@@ -117,10 +140,4 @@ class PaymentConfirmationController extends Controller
             return redirect('/')->with('error','No authorization');
         }
     }
-
-    // public function verificationPaymentConfirmation()
-    // {
-    //     $payment=PaymentConfirmation::where('status','waiting for admin verification')->get();
-    //     dd($payment);
-    // }
 }
