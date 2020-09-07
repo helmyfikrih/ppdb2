@@ -87,7 +87,7 @@ class PaymentConfirmationController extends Controller
     public function acceptPaymentConfirmation($id)
     {
         if(auth()->user()->role_id == 1){
-            $payment=PaymentConfirmation::find($id);
+            $payment=PaymentConfirmation::where('user_id',$id);
             $payment->status='Pembayaran Diterima';
             $payment->save();
             return redirect('/payment/show')->with('success','Payment confirmation has been accepted');
@@ -98,7 +98,7 @@ class PaymentConfirmationController extends Controller
     public function deniedPaymentConfirmation($id)
     {
         if(auth()->user()->role_id == 1){
-            $payment=PaymentConfirmation::find($id);
+            $payment=PaymentConfirmation::where('user_id',$id);
             $payment->status='Pembayaran Ditolak';
             $payment->save();
             return redirect('/payment/show')->with('error','Payment confirmation has been denied');
