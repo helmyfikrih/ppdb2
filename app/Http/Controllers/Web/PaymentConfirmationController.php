@@ -27,14 +27,18 @@ class PaymentConfirmationController extends Controller
     public function showPaymentConfirmation($id)
     {
         $user = User::find($id);
-        if(auth()->user()->role_id == 2){
-            if(auth()->user()->id==$id){
-                return view('admin.payment_confirmation.show',['user'=>$user]);
+        if(isset($user->paymentconfirmation)==true){
+            if(auth()->user()->role_id == 2){
+                if(auth()->user()->id==$id){
+                    return view('admin.payment_confirmation.show',['user'=>$user]);
+                }else{
+                    return redirect('/')->with('error','No authorization');
+                }
             }else{
-                return redirect('/')->with('error','No authorization');
+                    return view('admin.payment_confirmation.show',['user'=>$user]);
             }
         }else{
-                return view('admin.payment_confirmation.show',['user'=>$user]);
+            return redirect('/payment/input')->with('success','You have input your payment first');
         }
     }
 
@@ -87,7 +91,7 @@ class PaymentConfirmationController extends Controller
     public function acceptPaymentConfirmation($id)
     {
         if(auth()->user()->role_id == 1){
-            $payment=PaymentConfirmation::where('user_id',$id);
+            $payment=PaymentConfirmation::where('user_id',$id)->first();
             $payment->status='Pembayaran Diterima';
             $payment->save();
             return redirect('/payment/show')->with('success','Payment confirmation has been accepted');
@@ -98,7 +102,7 @@ class PaymentConfirmationController extends Controller
     public function deniedPaymentConfirmation($id)
     {
         if(auth()->user()->role_id == 1){
-            $payment=PaymentConfirmation::where('user_id',$id);
+            $payment=PaymentConfirmation::where('user_id',$id)->first();
             $payment->status='Pembayaran Ditolak';
             $payment->save();
             return redirect('/payment/show')->with('error','Payment confirmation has been denied');
